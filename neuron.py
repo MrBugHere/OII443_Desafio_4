@@ -1,4 +1,8 @@
 import math
+
+#HiperVariables
+b = 0
+
 class neuron:
     
     def __init__(self, prev_layer, prev_weights, next_layer, value):
@@ -8,17 +12,17 @@ class neuron:
         self.value = value      
     
 
-    def activation_function(self, w):
-        return_value = 1/( 1 + math.exp(-w))
+    def activation_function(self):
+        return_value = 1/( 1 + math.exp(-self.value))
         return return_value
  
-    def deriv_f(self, w):
-        return_value = self.activation_function(w)*(1 - self.activation_function(w))
+    def deriv_f(self, ):
+        return_value = self.activation_function()*(1 - self.activation_function())
         return return_value
 
     def calculate_valor(self):
-        for w in self.prev_Weights:
-            ret += w * self.activation_function(w)
-        return w 
+        for i in range(len(self.prev_Layer)):
+            ret += self.prev_Weights[i] * self.prev_Layer[i].activation_function()
+        return ret + b
 
     
