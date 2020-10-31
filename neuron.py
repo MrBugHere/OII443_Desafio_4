@@ -8,8 +8,9 @@ class neuron:
     def __init__(self, prev_layer, prev_weights, next_layer, value):
         self.prev_Layer = prev_layer
         self.prev_Weights =  prev_weights
+        self.aux_Weights = []
         self.next_Layer = next_layer
-        self.value = value      
+        self.value = value     
     
 
     def activation_function(self):
@@ -21,8 +22,11 @@ class neuron:
         return return_value
 
     def calculate_valor(self):
-        for i in range(len(self.prev_Layer)):
-            ret += self.prev_Weights[i] * self.prev_Layer[i].activation_function()
-        return ret + b
+        if self.prev_Layer is None:
+            print("CAPA DE ENTRADA, NO SE PUEDE CALCULAR VALORES A ESTA")
+        else:
+            for i in range(len(self.prev_Layer)):
+                ret += self.prev_Weights[i] * self.prev_Layer[i].activation_function()
+            return ret + b
 
     

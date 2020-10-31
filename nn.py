@@ -58,3 +58,6 @@ class nn:
             if i == len(order)-1 : #Capa de Salida
                 self.create_layer(2, self.red[i-1], np.random.rand(order[i]), order[i])
                 continue
+
+    def predict(self, input):
+        print()
