@@ -1,10 +1,9 @@
 import math
+import random
 from neuron import neuron
 import numpy as np
 import logging
 import pickle
-
-learning_rate = .5
 
 
 class nn:
@@ -86,6 +85,25 @@ class nn:
                 self.create_empty_layer(3, self.red[i - 1], order[i - 1], order[i])
                 logging.info("Se creo capa de Salida con %s neuronas", order[i])
                 continue
+
+    def train(self, x, y, num_iter, learning_rate):
+        visited = []
+        for i in num_iter:
+            pos = random.choice(len(x))
+            input = x[pos]
+            while input in visited:
+                pos = random.choice(len(x))
+                input = x[pos]
+            expected_output = y[pos]
+            visited.append(input)
+            self.predict(input)
+            self.backpropagate(learning_rate, expected_output)
+
+    def backpropagate(self, learning_rate, expected_value):
+        for i in range(1, len(self.red)):
+            for neuron in self.red[-i]:
+                neuron.calculate_new_weights(learning_rate, expected_value)
+        self.update_weights()
 
     def update_weights(self):
         for weights in capas:
