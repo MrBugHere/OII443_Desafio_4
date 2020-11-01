@@ -5,41 +5,18 @@ import numpy as np
 import logging
 import pickle
 
+class d:
+    def __init__(self, arrayIn, no_iter, total_it, percent):
+        self.Array = arrayIn
+        self.No_iter = no_iter
+        self.Total_it = total_it
+        self.Percent = percent
 
 class nn:
 
     def __init__(self):
         self.red = []
-
-    def create_layer(self, type_layer, prev_layer, prev_weights, no_neurons, pos):
-
-        if type_layer == 1:  # Capa de entrada
-            layer = []
-            for _ in range(no_neurons):  # se crea la cantidad de neuronas en la capa
-                layer.append(neuron(prev_layer, None, None, 0, pos))
-            self.red.append(layer)
-
-        elif type_layer == 2:  # Capa Oculta
-            layer = []
-            for _ in range(no_neurons):  # se crea la cantidad de neuronas en la capa
-                layer.append(neuron(prev_layer, prev_weights, None, 0, pos))
-
-            for n in self.red[-1]:  # conecta cada neurona de la capa anterior a la actual
-                n.next_layer = layer
-            self.red.append(layer)  # conecta la capa actual a NN
-        elif type_layer == 3:  # capa salida
-            layer = []
-            for _ in range(no_neurons):  # se crea la cantidad de neuronas en la capa
-                layer.append(neuron(prev_layer, prev_weights, None, 0, pos))
-            for n in self.red[-1]:
-                n.next_layer = layer  # conecta cada neurona de la capa anterior a la actual
-
-            self.red.append(layer)  # conecta la capa actual a NN
-        else:
-            logging.warning("Se intento de crear una capa inexistente")
-
-    def load_red(self, input):
-        print()
+    
 
     def create_empty_layer(self, type_layer, prev_layer, prev_weights, no_neurons):
 
@@ -88,16 +65,28 @@ class nn:
 
     def train(self, x, y, num_iter, learning_rate):
         visited = []
-        for i in num_iter:
-            pos = random.choice(len(x))
+        i25 =  int(num_iter*0.25)
+        i50 =  int(num_iter*0.5)
+        i75 =  int(num_iter*0.75)
+        save = []
+        for i in range(num_iter):
+            pos = random.randint(0, len(x))
             input = x[pos]
             while input in visited:
-                pos = random.choice(len(x))
+                pos = random.randint(0, len(x))
                 input = x[pos]
             expected_output = y[pos]
             visited.append(input)
-            self.predict(input)
+            ret = self.predict(input)
+            if(i == i25):
+                save.append(d(ret,i,num_iter,25))
+            if(i == i50):
+                save.append(d(ret,i,num_iter,50))
+            if(i == i75):
+                save.append(d(ret,i,num_iter,75))
             self.backpropagate(learning_rate, expected_output)
+        with open("Data.pickle", "wb") as file_:
+            pickle.dump(save, file_, -1)
 
     def backpropagate(self, learning_rate, expected_value):
         for i in range(1, len(self.red)):
