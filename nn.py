@@ -1,8 +1,9 @@
 import math 
 from neuron import neuron
 import numpy as np
+import logging
 
-#parametros
+#HiperVariables
 
 learning_rate = .5
 
@@ -17,7 +18,7 @@ class nn:
             layer = []
             for _ in range(no_neurons):#se crea la cantidad de neuronas en la capa
                 layer.append(neuron(prev_layer,prev_weights,None, 0))
-            
+            logging.info("Se creo capa de entrada")
             self.red.append(layer)
             
         elif type_layer == 2:#Capa Oculta
@@ -27,7 +28,7 @@ class nn:
             
             for n in self.red[-1]: #conecta cada neurona de la capa anterior a la actual
                 n.next_layer = layer
-
+            logging.info("Se creo capa de oculta")
             self.red.append(layer) #conecta la capa actual a NN
                 
 
@@ -38,11 +39,12 @@ class nn:
 
             for n in self.red[-1]:
                 n.next_layer = layer #conecta cada neurona de la capa anterior a la actual
-
+            
+            logging.info("Se creo capa de Salida")
             self.red.append(layer)  #conecta la capa actual a NN
 
         else:
-            print('ERROR tipo de capa no existente')
+           logging.warning("Se intento de crear una capa inexistente")
 
 
     def create_empty_red(self, order = [1,3,1]):
@@ -50,14 +52,16 @@ class nn:
             if i == 0: #Capa de entrada
                 self.create_layer(1, None, None, order[i])
                 continue
-            
-            if i < len(order) - 1: #Capa Oculta
+
+            if i == len(order) : #Capa de Salida
                 self.create_layer(2, self.red[i-1], np.random.rand(order[i]), order[i])
                 continue
 
-            if i == len(order)-1 : #Capa de Salida
+            if i < len(order): #Capa Oculta
                 self.create_layer(2, self.red[i-1], np.random.rand(order[i]), order[i])
                 continue
+
+            
 
     def predict(self, input):
         print()
