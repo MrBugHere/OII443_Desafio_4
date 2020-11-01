@@ -47,17 +47,17 @@ class nn:
         for i in range(len(order)):
             if i == 0: #Capa de entrada
                 self.create_layer(1, None, None, order[i])
-                logging.info("Se creo capa de entrada")
+                logging.info("Se creo capa de entrada con %s neuronas",  order[i])
                 continue           
 
             if i < (len(order)-1): #Capa Oculta
                 self.create_layer(2, self.red[i-1], np.random.rand(order[i]), order[i])
-                logging.info("Se creo capa de oculta")
+                logging.info("Se creo capa de oculta con %s neuronas",  order[i])
                 continue
 
             if i == len(order)-1 : #Capa de Salida
                 self.create_layer(3, self.red[i-1], np.random.rand(order[i]), order[i])
-                logging.info("Se creo capa de Salida")
+                logging.info("Se creo capa de Salida con %s neuronas",  order[i])
                 continue
 
             
