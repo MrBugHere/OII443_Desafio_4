@@ -26,7 +26,9 @@ class neuron:
         if self.prev_Layer is None:
             logging.warning("CAPA DE ENTRADA, NO SE PUEDE CALCULAR VALORES A ESTA")
         else:
+            ret = 0
             for i in range(len(self.prev_Layer)):
+                logging.info("largo weights: %s largo capa anterior: %s ",len(self.prev_Weights), len(self.prev_Layer))
                 ret += self.prev_Weights[i] * self.prev_Layer[i].activation_function()
             return ret + b
 

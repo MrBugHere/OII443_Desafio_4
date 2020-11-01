@@ -51,16 +51,26 @@ class nn:
                 continue           
 
             if i < (len(order)-1): #Capa Oculta
-                self.create_layer(2, self.red[i-1], np.random.rand(order[i]), order[i])
+                self.create_layer(2, self.red[i-1], np.random.uniform(low=0, high=1, size=(order[i-1])), order[i])
                 logging.info("Se creo capa de oculta con %s neuronas",  order[i])
                 continue
 
             if i == len(order)-1 : #Capa de Salida
-                self.create_layer(3, self.red[i-1], np.random.rand(order[i]), order[i])
+                self.create_layer(3, self.red[i-1], np.random.uniform(low=0, high=1, size=(order[i-1])), order[i])
                 logging.info("Se creo capa de Salida con %s neuronas",  order[i])
                 continue
 
-            
-
     def predict(self, input):
-        print()
+        for i in range(len(input)):
+            self.red[0][i].value = input[i]
+        
+        for i in range(1, len(self.red)):
+            logging.info("predicion iteracion %s",i)
+            for j in range(len(self.red[i])):                
+                logging.info("neurona %s",j)
+                self.red[i][j].value = self.red[i][j].calculate_valor()
+        ret = []
+        for i in range(len(self.red[-1])):
+            ret.append(self.red[-1][i].value)
+
+        return ret
