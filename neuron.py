@@ -48,15 +48,17 @@ class neuron:
                 new_weight = -learning_rate * n.delta * self.activation_function()
                 self.aux_Weights.append(new_weight)
 
-    #al final partes de la primera capa y se hace self.next_weights=self.aux_Weights lo mismo para todas las otras capas
-    #solo que tambien actualizas previous weights en el proceso (usas un for de n en prev_layer y haces
-    #self.prev_weight[i] = n.next_weight[self.pos] y luego i+=1
-
     def update_weights(self):
-        self.next_weights = self.aux_Weights
-        i = 0
-        for n in self.prev_Layer:
-            self.prev_Weights[i] = n.next_weights[self.pos]
-            i += 1
-        #una version basica de lo que comente arriba, queda checkear la capa inicial y final y por ultimo en nn llamar a
-        # esta funcion para cada neurona partiendo desde la primera capa
+        if self.prev_Layer is None:
+            self.next_weights = self.aux_Weights
+        elif self.next_Layer is None:
+            i = 0
+            for n in self.prev_Layer:
+                self.prev_Weights[i] = n.next_weights[self.pos]
+                i += 1
+        else:
+            i = 0
+            self.next_weights = self.aux_Weights
+            for n in self.prev_Layer:
+                self.prev_Weights[i] = n.next_weights[self.pos]
+                i += 1
