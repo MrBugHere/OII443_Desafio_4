@@ -21,4 +21,4 @@ unique_labels = np.sort(dataset1.label.unique())
 
 NN = nn()
 NN.create_empty_red([1784,20,len(unique_labels)])
-
+logging.info("Arreglo final: %s", NN.predict(data[0]))

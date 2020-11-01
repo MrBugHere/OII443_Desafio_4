@@ -28,7 +28,6 @@ class neuron:
         else:
             ret = 0
             for i in range(len(self.prev_Layer)):
-                logging.info("largo weights: %s largo capa anterior: %s ",len(self.prev_Weights), len(self.prev_Layer))
                 ret += self.prev_Weights[i] * self.prev_Layer[i].activation_function()
             return ret + b
 
