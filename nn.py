@@ -106,8 +106,9 @@ class nn:
         self.update_weights()
 
     def update_weights(self):
-        for weights in capas:
-            weights.update_weights()
+        for i in range(len(self.red)):
+            for neuron in self.red[i]:
+                neuron.update_weights()
 
     def predict(self, input):
         for i in range(len(input)):
