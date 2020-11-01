@@ -24,7 +24,7 @@ class neuron:
 
     def calculate_valor(self):
         if self.prev_Layer is None:
-            print("CAPA DE ENTRADA, NO SE PUEDE CALCULAR VALORES A ESTA")
+            logging.warning("CAPA DE ENTRADA, NO SE PUEDE CALCULAR VALORES A ESTA")
         else:
             for i in range(len(self.prev_Layer)):
                 ret += self.prev_Weights[i] * self.prev_Layer[i].activation_function()

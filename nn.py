@@ -18,7 +18,7 @@ class nn:
             layer = []
             for _ in range(no_neurons):#se crea la cantidad de neuronas en la capa
                 layer.append(neuron(prev_layer,prev_weights,None, 0))
-            logging.info("Se creo capa de entrada")
+            
             self.red.append(layer)
             
         elif type_layer == 2:#Capa Oculta
@@ -27,8 +27,7 @@ class nn:
                 layer.append(neuron(prev_layer, prev_weights, None, 0))
             
             for n in self.red[-1]: #conecta cada neurona de la capa anterior a la actual
-                n.next_layer = layer
-            logging.info("Se creo capa de oculta")
+                n.next_layer = layer            
             self.red.append(layer) #conecta la capa actual a NN
                 
 
@@ -36,13 +35,10 @@ class nn:
             layer = []
             for _ in range(no_neurons): #se crea la cantidad de neuronas en la capa
                 layer.append(neuron(prev_layer, prev_weights, None, 0))
-
             for n in self.red[-1]:
-                n.next_layer = layer #conecta cada neurona de la capa anterior a la actual
+                n.next_layer = layer #conecta cada neurona de la capa anterior a la actual            
             
-            logging.info("Se creo capa de Salida")
             self.red.append(layer)  #conecta la capa actual a NN
-
         else:
            logging.warning("Se intento de crear una capa inexistente")
 
@@ -51,14 +47,17 @@ class nn:
         for i in range(len(order)):
             if i == 0: #Capa de entrada
                 self.create_layer(1, None, None, order[i])
+                logging.info("Se creo capa de entrada")
+                continue           
+
+            if i < (len(order)-1): #Capa Oculta
+                self.create_layer(2, self.red[i-1], np.random.rand(order[i]), order[i])
+                logging.info("Se creo capa de oculta")
                 continue
 
-            if i == len(order) : #Capa de Salida
-                self.create_layer(2, self.red[i-1], np.random.rand(order[i]), order[i])
-                continue
-
-            if i < len(order): #Capa Oculta
-                self.create_layer(2, self.red[i-1], np.random.rand(order[i]), order[i])
+            if i == len(order)-1 : #Capa de Salida
+                self.create_layer(3, self.red[i-1], np.random.rand(order[i]), order[i])
+                logging.info("Se creo capa de Salida")
                 continue
 
             
