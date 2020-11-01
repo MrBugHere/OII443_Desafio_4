@@ -12,22 +12,48 @@ class nn:
     def __init__(self):
         self.red = []
 
+    def create_layer(self, type_layer, prev_layer, prev_weights, no_neurons):
+        
+        if type_layer == 1:#Capa de entrada
+            layer = []
+            for _ in range(no_neurons):#se crea la cantidad de neuronas en la capa
+                layer.append(neuron(prev_layer,None,None, 0))
+            self.red.append(layer)
+            
+        elif type_layer == 2:#Capa Oculta
+            layer = []
+            for _ in range(no_neurons):#se crea la cantidad de neuronas en la capa
+                layer.append(neuron(prev_layer, prev_weights, None, 0))
+
+            for n in self.red[-1]: #conecta cada neurona de la capa anterior a la actual
+                n.next_layer = layer 
+            self.red.append(layer) #conecta la capa actual a NN
+        elif type_layer == 3: #capa salida
+            layer = []
+            for _ in range(no_neurons): #se crea la cantidad de neuronas en la capa
+                layer.append(neuron(prev_layer, prev_weights, None, 0))
+            for n in self.red[-1]:
+                n.next_layer = layer #conecta cada neurona de la capa anterior a la actual  
+
+            self.red.append(layer)  #conecta la capa actual a NN
+        else:
+           logging.warning("Se intento de crear una capa inexistente")
+
     def create_empty_layer(self, type_layer, prev_layer, prev_weights, no_neurons):
         
         if type_layer == 1:#Capa de entrada
             layer = []
             for _ in range(no_neurons):#se crea la cantidad de neuronas en la capa
                 layer.append(neuron(prev_layer,None,None, 0))
-            
             self.red.append(layer)
             
         elif type_layer == 2:#Capa Oculta
             layer = []
             for _ in range(no_neurons):#se crea la cantidad de neuronas en la capa
                 layer.append(neuron(prev_layer, np.random.uniform(low=0, high=1, size=(prev_weights)), None, 0))
-            
+
             for n in self.red[-1]: #conecta cada neurona de la capa anterior a la actual
-                n.next_layer = layer            
+                n.next_layer = layer 
             self.red.append(layer) #conecta la capa actual a NN
                 
 
@@ -36,8 +62,8 @@ class nn:
             for _ in range(no_neurons): #se crea la cantidad de neuronas en la capa
                 layer.append(neuron(prev_layer, np.random.uniform(low=0, high=1, size=(prev_weights)), None, 0))
             for n in self.red[-1]:
-                n.next_layer = layer #conecta cada neurona de la capa anterior a la actual            
-            
+                n.next_layer = layer #conecta cada neurona de la capa anterior a la actual  
+
             self.red.append(layer)  #conecta la capa actual a NN
         else:
            logging.warning("Se intento de crear una capa inexistente")
@@ -66,6 +92,8 @@ class nn:
         
         for i in range(1, len(self.red)):
             for j in range(len(self.red[i])):
+                if self.red[i][j].value == 1 :
+                    continue
                 self.red[i][j].value = self.red[i][j].calculate_valor()
         ret = []
         for i in range(len(self.red[-1])):
