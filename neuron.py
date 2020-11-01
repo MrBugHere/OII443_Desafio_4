@@ -37,7 +37,7 @@ class neuron:
 
     def calculate_new_weights(self, learning_rate, expected_value):
         if self.next_Layer is None:
-            self.delta = (self.activation_function() - expected_value) * self.deriv_f()
+            self.delta = (self.activation_function() - expected_value) * self.deriv_f()            
         else:
             summation = 0
             for n in self.next_Layer:
