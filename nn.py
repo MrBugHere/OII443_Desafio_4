@@ -58,19 +58,19 @@ class nn:
         self.connect_layers()
 
     def train(self, x, y, num_iter, learning_rate):
-        visited = []
         i25 =  int(num_iter*0.25)
         i50 =  int(num_iter*0.5)
         i75 =  int(num_iter*0.75)
         save = []
+        positions = []
         for i in range(num_iter):
+            test = len(x)
             pos = random.randint(0, len(x))
-            input = x[pos]
-            while input in visited:
+            while pos in positions:
                 pos = random.randint(0, len(x))
-                input = x[pos]
+            positions.append(pos)
+            input = x[pos]
             expected_output = y[pos]
-            visited.append(input)
             ret = self.predict(input)
             if(i == i25):
                 save.append(d(ret,i,num_iter,25))
