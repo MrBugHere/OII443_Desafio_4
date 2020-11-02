@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import logging
 import time
+import math
 
 #Variables
 timestr = time.strftime("%d-%m-%Y")
@@ -47,6 +48,22 @@ try:
     NN.train(train_data, train_labels, no_iter, learning_rate)
     NN.Save_State()
     # NN.Load_State()
+    correct = 0
+    totaltests = 0
+    for i in range(math.floor(len(test_data) * 0.1)):
+        results = NN.predict(test_data[i])
+        answer = results.index(max(results))
+        # print(results)
+        # print(results.index(max(results)))
+        # print(test_data[20])
+        # print(test_labels[20])
+        if answer == test_labels[i]:
+            correct += 1
+        totaltests += 1
+    print(totaltests)
+    print(correct)
+    print()
+    print((correct / totaltests) * 100)
 
 except:
     logging.exception("Se obtuvo Excepcion")
