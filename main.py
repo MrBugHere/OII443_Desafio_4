@@ -5,7 +5,7 @@ import logging
 import time
 
 #Variables
-timestr = time.strftime("%d-%m-%Y") 
+timestr = time.strftime("%d-%m-%Y")
 levelLOG = logging.DEBUG
 
 #HiperVariables
@@ -39,7 +39,7 @@ def softMax(x):
 
 #---------------------------------------------#
 
-no_iter= 1
+no_iter= 100
 
 try:
     NN = nn()
@@ -47,8 +47,9 @@ try:
     NN.train(train_data, train_labels, no_iter, learning_rate)
     NN.Save_State()
     # NN.Load_State()
-    print(NN.predict(test_data[2]))
-    print(test_labels[2])
+    print(NN.predict(test_data[20]))
+    print(test_data[20])
+    print(test_labels[20])
 
 except:
     logging.exception("Se obtuvo Excepcion")
