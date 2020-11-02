@@ -9,7 +9,10 @@ class neuron:
 
     def __init__(self, prev_layer, prev_weights, next_layer, value, pos):
         self.prev_Layer = prev_layer
-        self.prev_Weights = prev_weights
+        if prev_weights is None:
+            self.prev_Weights = prev_weights
+        else:
+            self.prev_Weights = prev_weights.tolist()
         self.aux_Weights = []
         self.next_weights = []
         self.next_Layer = next_layer
@@ -37,7 +40,16 @@ class neuron:
 
     def calculate_new_weights(self, learning_rate, expected_value):
         if self.next_Layer is None:
-            self.delta = (self.activation_function() - expected_value) * self.deriv_f()            
+            self.delta = (self.activation_function() - expected_value) * self.deriv_f()
+        elif self.prev_Layer is None:
+            summation = 0
+            for n in self.next_Layer:
+                summation += n.delta * n.prev_Weights[self.pos]
+            self.delta = summation * self.deriv_f()
+
+            for n in self.next_Layer:
+                new_weight = -learning_rate * n.delta * self.activation_function()
+                self.aux_Weights.append(new_weight)
         else:
             summation = 0
             for n in self.next_Layer:
