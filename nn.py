@@ -64,7 +64,6 @@ class nn:
         save = []
         positions = []
         for i in range(num_iter):
-            test = len(x)
             pos = random.randint(0, len(x))
             while pos in positions:
                 pos = random.randint(0, len(x))
@@ -73,10 +72,13 @@ class nn:
             expected_output = y[pos]
             ret = self.predict(input)
             if(i == i25):
+                logging.info("Se guardo dato del 25 por ciento completado")
                 save.append(d(ret,i,num_iter,25))
             if(i == i50):
+                logging.info("Se guardo dato del 50 por ciento completado")
                 save.append(d(ret,i,num_iter,50))
             if(i == i75):
+                logging.info("Se guardo dato del 75 por ciento completado")
                 save.append(d(ret,i,num_iter,75))
             self.backpropagate(learning_rate, expected_output)
         with open("Data.pickle", "wb") as file_:
@@ -110,5 +112,5 @@ class nn:
         with open("Save_State.pickle", "wb") as file_:
             pickle.dump(self.red, file_, -1)
 
-    def Load_State(self, input):
-        self.red = pickle.load(open(input, "rb", -1))
+    def Load_State(self):
+        self.red = pickle.load(open("Save_State.pickle", "rb", -1))
