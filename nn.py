@@ -22,19 +22,18 @@ class nn:
             for j in range(len(self.red[i])):
                 if i == 0:
                     self.red[i][j].next_Layer = self.red[i+1]
-                if i < (len(self.red) - 1):
+                elif i < (len(self.red) - 1):
                     self.red[i][j].next_Layer = self.red[i+1]
-                    self.red[i][j].prev_layer = self.red[i-1]
-                if i == len(self.red) - 1:
-                    self.red[i][j].prev_layer = self.red[i-1]
-
+                    self.red[i][j].prev_Layer = self.red[i-1]
+                elif i == len(self.red) - 1:
+                    self.red[i][j].prev_Layer = self.red[i-1]
 
     def create_empty_red(self, order=[1, 3, 1]):
         for i in range(len(order)):
             if i == 0:  # Capa de entrada
                 layer = []
-                for _ in range(order[i]):  # se crea la cantidad de neuronas en la capa
-                    layer.append(neuron(None, None, None, 0, None))
+                for z in range(order[i]):  # se crea la cantidad de neuronas en la capa
+                    layer.append(neuron(None, None, None, 0, z))
                 self.red.append(layer)
                 logging.info("Se creo capa de entrada con %s neuronas", order[i])
 
@@ -42,16 +41,16 @@ class nn:
 
             if i < (len(order) - 1):  # Capa Oculta
                 layer = []
-                for _ in range(order[i]):  # se crea la cantidad de neuronas en la capa
-                    layer.append(neuron(None, np.random.uniform(low=0, high=1, size=(len(self.red[-1]))), None, 0, None))
+                for z in range(order[i]):  # se crea la cantidad de neuronas en la capa
+                    layer.append(neuron(None, np.random.uniform(low=0, high=1, size=(len(self.red[-1]))), None, 0, z))
                 self.red.append(layer)  # conecta la capa actual a NN
                 logging.info("Se creo capa de oculta con %s neuronas", order[i])
                 continue
 
             if i == len(order) - 1:  # Capa de Salida
                 layer = []
-                for _ in range(order[i]):  # se crea la cantidad de neuronas en la capa
-                    layer.append(neuron(None, np.random.uniform(low=0, high=1, size=(len(self.red[-1]))), None, 0, None))
+                for z in range(order[i]):  # se crea la cantidad de neuronas en la capa
+                    layer.append(neuron(None, np.random.uniform(low=0, high=1, size=(len(self.red[-1]))), None, 0, z))
                 self.red.append(layer)  # conecta la capa actual a NN
                 logging.info("Se creo capa de Salida con %s neuronas", order[i])
                 continue
@@ -64,9 +63,9 @@ class nn:
         save = []
         positions = []
         for i in range(num_iter):
-            pos = random.randint(0, len(x))
+            pos = random.randint(0, len(x)-1)
             while pos in positions:
-                pos = random.randint(0, len(x))
+                pos = random.randint(0, len(x)-1)
             positions.append(pos)
             input = x[pos]
             expected_output = y[pos]
@@ -85,7 +84,7 @@ class nn:
             pickle.dump(save, file_, -1)
 
     def backpropagate(self, learning_rate, expected_value):
-        for i in range(1, len(self.red)):
+        for i in range(1, len(self.red)+1):
             for neuron in self.red[-i]:
                 neuron.calculate_new_weights(learning_rate, expected_value)
         self.update_weights()
