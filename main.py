@@ -39,17 +39,14 @@ def softMax(x):
 
 #---------------------------------------------#
 
-no_iter= 100
+no_iter= 1500
 
 try:
     NN = nn()
-    NN.create_empty_red([1784,20,len(unique_labels)])
+    NN.create_empty_red([1784,70,50,20,len(unique_labels)])
     NN.train(train_data, train_labels, no_iter, learning_rate)
     NN.Save_State()
     # NN.Load_State()
-    print(NN.predict(test_data[20]))
-    print(test_data[20])
-    print(test_labels[20])
 
 except:
     logging.exception("Se obtuvo Excepcion")

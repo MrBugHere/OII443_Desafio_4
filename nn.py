@@ -3,7 +3,8 @@ import random
 from neuron import neuron
 import numpy as np
 import logging
-import pickle
+# import pickle
+import joblib
 
 class d:
     def __init__(self, arrayIn, no_iter, total_it, percent):
@@ -80,8 +81,8 @@ class nn:
                 logging.info("Se guardo dato del 75 por ciento completado")
                 save.append(d(ret,i,num_iter,75))
             self.backpropagate(learning_rate, expected_output)
-        with open("Data.pickle", "wb") as file_:
-            pickle.dump(save, file_, -1)
+        fileName = 'Collected_Data.sav'
+        joblib.dump(save,fileName)
 
     def backpropagate(self, learning_rate, expected_value):
         for i in range(1, len(self.red)+1):
@@ -108,8 +109,11 @@ class nn:
         return ret
 
     def Save_State(self):
-        with open("Save_State.pickle", "wb") as file_:
-            pickle.dump(self.red, file_, -1)
+        logging.info("Guardando Estado")
+        fileName = 'finalized_trained_data.sav'
+        joblib.dump(self.red,fileName)
 
     def Load_State(self):
-        self.red = pickle.load(open("Save_State.pickle", "rb", -1))
+        logging.info("Cargando Estado Previo")
+        fileName = 'finalized_trained_data.sav'
+        self.red = joblib.load(fileName)
