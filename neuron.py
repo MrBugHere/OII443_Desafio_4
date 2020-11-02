@@ -2,7 +2,7 @@ import math
 import logging
 
 # HiperVariables
-b = 0
+b = -2
 
 
 class neuron:
