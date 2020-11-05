@@ -1,4 +1,3 @@
-import math
 import random
 from neuron import neuron
 import numpy as np
@@ -35,6 +34,7 @@ class nn:
                 layer = []
                 for z in range(order[i]):  # se crea la cantidad de neuronas en la capa
                     layer.append(neuron(None, None, None, 0, z))
+                layer.append(neuron(None, None, None, None, None)) #se le añade el bias neuron
                 self.red.append(layer)
                 logging.info("Se creo capa de entrada con %s neuronas", order[i])
 
@@ -44,6 +44,7 @@ class nn:
                 layer = []
                 for z in range(order[i]):  # se crea la cantidad de neuronas en la capa
                     layer.append(neuron(None, np.random.uniform(low=0, high=1, size=(len(self.red[-1]))), None, 0, z))
+                layer.append(neuron(None, len(self.red[-1]), None, None, None))  # se le añade el bias neuron
                 self.red.append(layer)  # conecta la capa actual a NN
                 logging.info("Se creo capa de oculta con %s neuronas", order[i])
                 continue
@@ -61,34 +62,58 @@ class nn:
         i25 =  int(num_iter*0.25)
         i50 =  int(num_iter*0.5)
         i75 =  int(num_iter*0.75)
+        iFinal = num_iter - 1
         save = []
         positions = []
         for i in range(num_iter):
-            pos = random.randint(0, len(x)-1)
+            high = len(x)-1
+            pos = int(high*random.random())
             while pos in positions:
-                pos = random.randint(0, len(x)-1)
+                pos = int(high*random.random())
             positions.append(pos)
             input = x[pos]
             expected_output = y[pos]
             ret = self.predict(input)
-            if(i == i25):
+            if i == 1:
+                logging.info("Se inicia entrenamiento")
+            if i == i25:
                 logging.info("Se guardo dato del 25 por ciento completado")
                 save.append(d(ret,i,num_iter,25))
-            if(i == i50):
+            if i == i50:
                 logging.info("Se guardo dato del 50 por ciento completado")
                 save.append(d(ret,i,num_iter,50))
-            if(i == i75):
+            if i == i75:
                 logging.info("Se guardo dato del 75 por ciento completado")
                 save.append(d(ret,i,num_iter,75))
-            self.backpropagate(learning_rate, expected_output)
+            if i == iFinal:
+                logging.info("Se guardo dato del 100 por ciento completado")
+                save.append(d(ret,i,num_iter,100))
+            self.backpropagate(learning_rate, ret, expected_output)
         fileName = 'Collected_Data.sav'
         joblib.dump(save,fileName)
 
-    def backpropagate(self, learning_rate, expected_value):
-        for i in range(1, len(self.red)+1):
+    def backpropagate(self, learning_rate, output, expected_value):
+        expected_vector = []
+        for i in range(len(self.red[-1])):
+            if expected_value == i:
+                expected_vector.append(1)
+            else:
+                expected_vector.append(0)
+        i = 0
+        for neuron in self.red[-1]:
+            neuron.calculate_new_weights(learning_rate, output[i], expected_vector[i])
+            i+=1
+        for i in range(2, len(self.red)+1):
             for neuron in self.red[-i]:
-                neuron.calculate_new_weights(learning_rate, expected_value)
+                neuron.calculate_new_weights(learning_rate)
+        if not self.red[0][0].next_weights:
+            self.set_next_weights()
         self.update_weights()
+
+    def set_next_weights(self):
+        for i in range(len(self.red)):
+            for n in self.red[i]:
+                n.set_next_weights()
 
     def update_weights(self):
         for i in range(len(self.red)):
@@ -101,10 +126,10 @@ class nn:
 
         for i in range(1, len(self.red)):
             for j in range(len(self.red[i])):
-                self.red[i][j].value = self.red[i][j].calculate_valor()
+                self.red[i][j].update_valor()
         ret = []
         for i in range(len(self.red[-1])):
-            ret.append(self.red[-1][i].value)
+            ret.append(self.red[-1][i].activation_function())
 
         return ret
 
@@ -112,6 +137,7 @@ class nn:
         logging.info("Guardando Estado")
         fileName = 'finalized_trained_data.sav'
         joblib.dump(self.red,fileName)
+        logging.info("Estado Guardado")
 
     def Load_State(self):
         logging.info("Cargando Estado Previo")
